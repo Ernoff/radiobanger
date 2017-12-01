@@ -9,8 +9,10 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
+import TrackPlayer from 'react-native-track-player';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -19,7 +21,26 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-export default class App extends Component<{}> {
+export default class App extends Component {
+  constructor(){
+    super()
+  }
+  componentWillMount(){
+    
+  }
+  playStream(){
+    TrackPlayer.setupPlayer().then(()=> {
+       TrackPlayer.add({
+        id: 'trackId',
+        url : 'http://5.135.142.83:8300/stream',
+        title: 'Online Stream'
+      });
+      TrackPlayer.play();
+    })
+  }
+  stopStream(){
+    TrackPlayer.stop();
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -31,7 +52,19 @@ export default class App extends Component<{}> {
         </Text>
         <Text style={styles.instructions}>
           {instructions}
-        </Text>
+          </Text>
+          <Button
+            onPress={this.playStream}
+            title="Play radio"
+            color="#841584"
+            style={styles.button}
+          />
+          <Button
+            onPress={this.stopStream}
+            title="Stop radio"
+            color="#841584"
+            style={styles.button}
+          />
       </View>
     );
   }
@@ -43,6 +76,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  button:{
+    padding:50
   },
   welcome: {
     fontSize: 20,
